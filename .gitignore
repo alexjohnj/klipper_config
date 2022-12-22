@@ -1,3 +1,7 @@
+# Linked Files
+/printer.cfg
+/active_printer/
+
 # Klipper Specific Files
 
 *.bkp
