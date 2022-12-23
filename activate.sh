@@ -24,6 +24,16 @@ fi
 mkdir -p "$ACTIVE_PRINTER_DIR"
 ln -f -s "$PRINTER_CONFIG_DIR/printer.cfg" "./printer.cfg"
 
-if [ -e "$PRINTER_CONFIG_DIR/macros.cfg" ]; then
+if [[ -e "$PRINTER_CONFIG_DIR/macros.cfg" ]]; then
     ln -f -s "../$PRINTER_CONFIG_DIR/macros.cfg" "$ACTIVE_PRINTER_DIR/macros.cfg"
+else
+    rm -f "$ACTIVE_PRINTER_DIR/macros.cfg"
+    > "$ACTIVE_PRINTER_DIR/macros.cfg"
+fi
+
+if [[ -e "$PRINTER_CONFIG_DIR/moonraker.conf" ]]; then
+    ln -f -s "../$PRINTER_CONFIG_DIR/moonraker.conf" "$ACTIVE_PRINTER_DIR/moonraker.conf"
+else
+    rm -f "$ACTIVE_PRINTER_DIR/moonraker.conf"
+    > "$ACTIVE_PRINTER_DIR/moonraker.conf"
 fi
