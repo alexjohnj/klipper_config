@@ -287,3 +287,4 @@ tags
 
 # End of https://www.gitignore.io/api/osx,swift,xcode,emacs,appcode,vim
 /timelapse.cfg
+adxl_results/
