@@ -1,3 +1,7 @@
+# Shake & Tune Files
+K-ShakeTune
+K-ShakeTune_results/
+
 # Linked Files
 /printer.cfg
 /active_printer/
@@ -5,6 +9,8 @@
 # Klipper Specific Files
 
 *.bkp
+
+################################################################################
 
 # Created by https://www.gitignore.io/api/osx,swift,xcode,emacs,appcode,vim
 # Edit at https://www.gitignore.io/?templates=osx,swift,xcode,emacs,appcode,vim
@@ -286,5 +292,3 @@ tags
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 # End of https://www.gitignore.io/api/osx,swift,xcode,emacs,appcode,vim
-/timelapse.cfg
-adxl_results/

@@ -1,6 +1,3 @@
 [submodule "KAMP"]
 	path = KAMP
 	url = https://github.com/kyleisah/Klipper-Adaptive-Meshing-Purging.git
-[submodule "klippain"]
-	path = klippain
-	url = https://github.com/Frix-x/klippain.git

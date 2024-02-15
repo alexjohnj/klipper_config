@@ -1,39 +1,74 @@
 #!/usr/bin/env bash
 
 set -e
+
 PRINTER_NAME=$1
 ACTIVE_PRINTER_DIR="active_printer"
-
-if [ -z $PRINTER_NAME ]; then
-    echo "USAGE: activate PRINTER_NAME"
-    exit 1
-fi
-
 PRINTER_CONFIG_DIR="printers/$PRINTER_NAME"
 
-if ! [ -d $PRINTER_CONFIG_DIR ]; then
-    echo "No configuration directory exists for printer $PRINTER_NAME"
+KLIPPAIN_INSTALL_SCRIPT="https://raw.githubusercontent.com/Frix-x/klippain-shaketune/b42e377ac68147ad7913ae30333fd2a3d1227331/install.sh"
+KLIPPAIN_SHAKETUNE_DIR="$HOME/klippain_shaketune"
+
+function info() {
+    printf "[I] %s\n" "$1"
+}
+
+function error() {
+    printf "[E] %s\n" "$1"
+}
+
+function fail() {
+    error "$1"
     exit 1
-fi
+}
 
-if ! [ -e "$PRINTER_CONFIG_DIR/printer.cfg" ]; then
-    echo "No printer.cfg file exists for printer $PRINTER_NAME"
-    exit 1
-fi
+function validate_args {
+    if [ -z $PRINTER_NAME ]; then
+        fail "USAGE: activate PRINTER_NAME"
+    fi
 
-mkdir -p "$ACTIVE_PRINTER_DIR"
-ln -f -s "$PRINTER_CONFIG_DIR/printer.cfg" "./printer.cfg"
+    if ! [ -d $PRINTER_CONFIG_DIR ]; then
+        fail "No configuration directory exists for printer $PRINTER_NAME"
+    fi
 
-if [[ -e "$PRINTER_CONFIG_DIR/macros.cfg" ]]; then
-    ln -f -s "../$PRINTER_CONFIG_DIR/macros.cfg" "$ACTIVE_PRINTER_DIR/macros.cfg"
-else
-    rm -f "$ACTIVE_PRINTER_DIR/macros.cfg"
-    > "$ACTIVE_PRINTER_DIR/macros.cfg"
-fi
+    if ! [ -e "$PRINTER_CONFIG_DIR/printer.cfg" ]; then
+        fail "No printer.cfg file exists for printer $PRINTER_NAME"
+    fi
+}
 
-if [[ -e "$PRINTER_CONFIG_DIR/moonraker.conf" ]]; then
-    ln -f -s "../$PRINTER_CONFIG_DIR/moonraker.conf" "$ACTIVE_PRINTER_DIR/moonraker.conf"
-else
-    rm -f "$ACTIVE_PRINTER_DIR/moonraker.conf"
-    > "$ACTIVE_PRINTER_DIR/moonraker.conf"
-fi
+function install_config_files {
+    info "Linking configuration files..."
+
+    mkdir -p "$ACTIVE_PRINTER_DIR"
+    ln -f -s "$PRINTER_CONFIG_DIR/printer.cfg" "./printer.cfg"
+
+    if [[ -e "$PRINTER_CONFIG_DIR/macros.cfg" ]]; then
+        ln -f -s "../$PRINTER_CONFIG_DIR/macros.cfg" "$ACTIVE_PRINTER_DIR/macros.cfg"
+    else
+        rm -f "$ACTIVE_PRINTER_DIR/macros.cfg"
+        > "$ACTIVE_PRINTER_DIR/macros.cfg"
+    fi
+
+    if [[ -e "$PRINTER_CONFIG_DIR/moonraker.conf" ]]; then
+        ln -f -s "../$PRINTER_CONFIG_DIR/moonraker.conf" "$ACTIVE_PRINTER_DIR/moonraker.conf"
+    else
+        rm -f "$ACTIVE_PRINTER_DIR/moonraker.conf"
+        > "$ACTIVE_PRINTER_DIR/moonraker.conf"
+    fi
+}
+
+function install_klippain_shaketune {
+    if ! [ -d "$KLIPPAIN_SHAKETUNE_DIR" ]; then
+        info "Installing Klippain Shake & Tune"
+        curl -sSf "$KLIPPAIN_INSTALL_SCRIPT" | bash
+    else
+        info "Skipping Klippain Shake & Tune Install. Existing install detected at $KLIPPAIN_SHAKETUNE_DIR."
+    fi
+}
+
+validate_args
+
+info "Activating configuration for \"$PRINTER_NAME\""
+
+install_config_files
+install_klippain_shaketune
